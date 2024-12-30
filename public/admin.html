@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Login</h1>
+    </header>
+    <main class="container">
+        <div class="form-container">
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminPassword">Password:</label>
+                    <input type="password" id="adminPassword" name="adminPassword" required>
+                </div>
+                <br>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const adminPassword = document.getElementById('adminPassword').value;
+            
+            fetch('/api/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password: adminPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('adminAuthenticated', 'true');
+                    window.location.href = '/dashboard.html';
+                } else {
+                    alert('Invalid password. Please try again.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

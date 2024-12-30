@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <main class="container">
+        <div class="form-container">
+            <table id="ordersTable" class="admin-orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User ID</th>
+                        <th>Stock Code</th>
+                        <th>Box Location</th>
+                        <th>Vehicle Number</th>
+                        <th>Work Order Number</th>
+                        <th>Quantity</th>
+                        <th>Order Date</th>
+                        <th>Completed</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Orders will be populated here -->
+                </tbody>
+            </table>
+            <div class="update-container">
+                <button id="updateAllBtn" class="submit-btn">Update All</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Your Company</p>
+    </footer>
+
+    <script>
+        if (localStorage.getItem('adminAuthenticated') !== 'true') {
+            window.location.href = '/admin.html';
+        } else {
+            fetch('/api/admin/orders')
+            .then(response => response.json())
+            .then(data => {
+                const ordersTableBody = document.getElementById('ordersTable').querySelector('tbody');
+                data.orders.forEach(order => {
+                    const checked = order.completed ? 'checked' : '';
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${order.order_id}</td>
+                        <td>${order.user_id}</td>
+                        <td>${order.stock_code}</td>
+                        <td>${order.box_location}</td>
+                        <td>${order.vehicle_number}</td>
+                        <td>${order.work_order_number}</td>
+                        <td>${order.quantity}</td>
+                        <td>${new Date(order.order_date).toLocaleString()}</td>
+                        <td><input type="checkbox" class="completed-checkbox" data-order-id="${order.order_id}" ${checked}></td>
+                        <td><button class="send-text-btn" data-user-id="${order.user_id}" data-box-location="${order.box_location}">Send Text</button></td>
+                    `;
+                    ordersTableBody.appendChild(row);
+                });
+
+                document.querySelectorAll('.send-text-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.getAttribute('data-user-id');
+                        const boxLocation = this.getAttribute('data-box-location');
+                        fetch('/api/send-text', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ user_id: userId, box_location: boxLocation })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Text message sent successfully!');
+                            } else {
+                                alert('Failed to send text message.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                });
+
+                document.getElementById('updateAllBtn').addEventListener('click', function() {
+                    const updates = [];
+                    const checkboxes = document.querySelectorAll('.completed-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        const orderId = checkbox.getAttribute('data-order-id');
+                        const completed = checkbox.checked ? 1 : 0;
+                        updates.push({ orderId, completed });
+                    });
+
+                    fetch('/api/admin/update-completed-all', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ updates })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('All orders updated successfully!');
+                        } else {
+                            alert('Failed to update some or all orders.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

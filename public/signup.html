@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sign Up</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <form id="signupForm" class="form-container">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" id="phone_number" placeholder="Phone Number" required>
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+                <div id="error-message" style="color: red; margin-top: 10px;"></div>
+            </form>
+            <button onclick="window.location.href='index.html'" class="navigation-btn">Go to Login</button>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sign Up Page</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const data = {
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                phone_number: document.getElementById('phone_number').value
+            };
+
+            fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    document.getElementById('error-message').innerText = data.message;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

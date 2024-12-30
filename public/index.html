@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Login</h1>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <form id="loginForm" class="form-container">
+                <div class="form-group">
+                    <label for="phone_number">Phone Number</label>
+                    <input type="text" id="phone_number" placeholder="Phone Number" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+                <div id="error-message" style="color: red; margin-top: 10px;"></div>
+            </form>
+            <button onclick="window.location.href='signup.html'" class="navigation-btn">Go to Sign Up</button>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Login Page</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const phoneNumber = document.getElementById('phone_number').value;
+            
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ phone_number: phoneNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Store user ID in localStorage
+                    localStorage.setItem('userId', data.user_id);
+                    alert('Login successful!');
+                    // Redirect to the form submission page
+                    window.location.href = '/form.html';
+                } else {
+                    alert('Login failed. Please check your phone number.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

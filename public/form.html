@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Submission</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Submit an Order</h1>
+        </div>
+    </header>
+    <div class="container">
+        <form id="orderForm" class="form-container">
+            <div class="form-group">
+                <label for="stockCode">Stock Code:</label>
+                <input type="text" id="stockCode" name="stockCode" required>
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="boxLocation">Box Location:</label>
+                <input type="number" id="boxLocation" name="boxLocation" required min="1" step="1" max="20">
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="vehicleNumber">Vehicle Number:</label>
+                <input type="text" id="vehicleNumber" name="vehicleNumber" required>
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="workOrderNumber">Work Order Number:</label>
+                <input type="text" id="workOrderNumber" name="workOrderNumber" required>
+                <br>
+            </div>
+            <div class="form-group">
+                <label for="workOrderNumber">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" required min="1" step="1">
+                <br>
+                <input type="hidden" id="orderDate" name="orderDate">
+            </div>
+            <button type="submit" class="submit-btn">Submit Order</button>
+            <div id="error-message" style="color: red; margin-top: 10px;"></div>
+        </form>
+    </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Orders Page</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userId = localStorage.getItem('userId');
+            const stockCode = document.getElementById('stockCode').value;
+            const boxLocation = document.getElementById('boxLocation').value;
+            const vehicleNumber = document.getElementById('vehicleNumber').value;
+            const workOrderNumber = document.getElementById('workOrderNumber').value;
+            const quantity = document.getElementById('quantity').value;
+            const orderDate = new Date().toISOString(); // Current date and time in ISO format
+            
+            fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    stockCode: stockCode,
+                    boxLocation: boxLocation,
+                    vehicleNumber: vehicleNumber,
+                    workOrderNumber: workOrderNumber,
+                    quantity: quantity,
+                    orderDate: orderDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order submitted successfully!');
+                } else {
+                    alert('Failed to submit order.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
