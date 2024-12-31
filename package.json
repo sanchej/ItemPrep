@@ -4,8 +4,7 @@
   "description": "A full-stack project",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "build": "sh public/build_files.sh"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "express": "^4.17.1",
