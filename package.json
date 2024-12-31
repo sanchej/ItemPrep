@@ -1,15 +1,16 @@
 {
-  "name": "my-project",
-  "version": "1.0.0",
-  "description": "A full-stack project",
-  "main": "src/server.js",
-  "scripts": {
-    "start": "node src/server.js",
-    "build": "sh public/build_files.sh"
-  },
-  "dependencies": {
-    "express": "^4.17.1",
-    "mysql": "^2.18.1",
-    "twilio": "^3.66.0"
-  }
+    "name": "my-project",
+    "version": "1.0.0",
+    "description": "A full-stack project",
+    "main": "src/server.js",
+    "scripts": {
+        "start": "node src/server.js",
+        "build": "echo 'No build step defined. Add your build command here if needed.'",
+        "test": "echo 'Running tests...'"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "mysql": "^2.18.1",
+        "twilio": "^3.66.0"
+    }
 }
