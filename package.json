@@ -4,7 +4,10 @@
   "description": "A full-stack project",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "build": "node src/build_files.sh" // or any other valid build command
+}
+
   },
   "dependencies": {
     "express": "^4.17.1",
