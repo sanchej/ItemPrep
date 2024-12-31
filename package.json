@@ -5,9 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "node src/build_files.sh"
-}
-
+    "build": "sh public/build_files.sh"
   },
   "dependencies": {
     "express": "^4.17.1",
