@@ -2,14 +2,24 @@
     "version": 2,
     "builds": [
         {
-            "src": "server.js",
+            "src": "src/server.js",
             "use": "@vercel/node"
         }
     ],
     "routes": [
         {
             "src": "/api/(.*)",
-            "dest": "/server.js"
+            "dest": "/src/server.js"
         }
-    ]
+    ],
+    "env": {
+        "TWILIO_ACCOUNT_SID": "@twilio_account_sid",
+        "TWILIO_AUTH_TOKEN": "@twilio_auth_token",
+        "TWILIO_PHONE_NUMBER": "@twilio_phone_number",
+        "DB_HOST": "@db_host",
+        "DB_USER": "@db_user",
+        "DB_PASSWORD": "@db_password",
+        "DB_NAME": "@db_name",
+        "DB_PORT": "@db_port"
+    }
 }
