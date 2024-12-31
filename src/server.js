@@ -51,10 +51,16 @@ app.post('/api/login', (req, res) => {
     const sql = 'SELECT * FROM Users WHERE phone_number = ?';
     
     db.query(sql, [phone_number], (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.error('Error executing query:', err);
+            res.status(500).json({ success: false, message: 'Internal server error' });
+            return;
+        }
         if (result.length > 0) {
+            console.log('User found:', result[0]);  // Log the result to check
             res.json({ success: true, user_id: result[0].user_id });
         } else {
+            console.log('No user found for phone number:', phone_number);  // Log if no user found
             res.json({ success: false });
         }
     });
